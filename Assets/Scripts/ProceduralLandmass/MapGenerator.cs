@@ -8,6 +8,7 @@ namespace HEXWorld.ProceduralLandmass
     public class MapGenerator : MonoBehaviour
     {
         public bool isAutoUpdate;
+        public DrawMode drawMode;
 
         [SerializeField] private int mapWidth;
         [SerializeField] private int mapHeight;
@@ -17,6 +18,8 @@ namespace HEXWorld.ProceduralLandmass
         [Range(0, 1)] [SerializeField] private float persistence;
         [SerializeField] private float lacunarity;
         [SerializeField] private Vector2 offset;
+        [SerializeField] private TerrainType[] regions;
+        
 
         private MapDisplay _mapDisplay;
 
@@ -27,12 +30,11 @@ namespace HEXWorld.ProceduralLandmass
 
         public void GenerateMap()
         {
-            _mapDisplay = GetComponent<MapDisplay>();
             var noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistence,
                 lacunarity, offset);
-            _mapDisplay.DrawNoiseMap(noiseMap);
+            GetComponent<MapDisplay>().DisplayMap(noiseMap, regions, drawMode);
         }
-
+        
         private void OnValidate()
         {
             if (mapWidth < 1)

@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace HEXWorld.ProceduralLandmass
 {
+    [System.Serializable]
     public struct TerrainType
     {
         public string name;
