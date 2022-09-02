@@ -5,7 +5,7 @@ namespace HEXWorld.ProceduralLandmass
 {
     public static class Noise
     {
-        public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, int seed, float scale, int octaves,
+        public static float[,] GenerateHeightMap(int mapWidth, int mapHeight, int seed, float scale, int octaves,
             float persistence, float lacunarity, Vector2 offset)
         {
             float[,] noiseMap = new float[mapWidth, mapHeight];

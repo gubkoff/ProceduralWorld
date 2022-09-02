@@ -7,10 +7,27 @@ namespace HEXWorld.ProceduralLandmass
     public class MapDisplay : MonoBehaviour
     {
         [SerializeField] private Renderer textureRenderer;
+        [SerializeField] private MeshFilter meshFilter;
+        [SerializeField] private MeshRenderer meshRenderer;
 
-        public void DisplayMap(float[,] noiseMap, TerrainType[] terrainTypes, DrawMode drawMode = DrawMode.NoiseMap)
+        public void DisplayMap(float[,] noiseMap, TerrainType[] regions, DrawMode drawMode = DrawMode.NoiseMap)
         {
-            DrawTexture(GetTextureByDrawMode(noiseMap, terrainTypes, drawMode));
+            DrawTexture(GetTextureByDrawMode(noiseMap, regions, drawMode));
+        }
+
+        public void DisplayMap(float[,] noiseMap, TerrainType[] regions, DrawMode drawMode = DrawMode.NoiseMap,
+            MeshData meshData = null)
+        {
+            if (meshData != null && drawMode.Equals(DrawMode.Mesh))
+            {
+                Debug.Log("GENERATE");
+                meshFilter.sharedMesh = meshData.CreateMesh();
+                meshRenderer.sharedMaterial.mainTexture = GetTextureByDrawMode(noiseMap, regions, drawMode);
+            }
+            else
+            {
+                DisplayMap(noiseMap, regions, drawMode);
+            }
         }
 
         private void DrawTexture(Texture2D texture)
@@ -32,6 +49,10 @@ namespace HEXWorld.ProceduralLandmass
                     texture = TextureGenerator.TextureFromHeightMap(noiseMap);
                     break;
                 case DrawMode.ColorMap:
+                    texture = TextureGenerator.TextureFromColorMap(GetColorMapFromHeightMap(width, height, regions,
+                        noiseMap), width, height);
+                    break;
+                case DrawMode.Mesh:
                     texture = TextureGenerator.TextureFromColorMap(GetColorMapFromHeightMap(width, height, regions,
                         noiseMap), width, height);
                     break;
@@ -58,6 +79,7 @@ namespace HEXWorld.ProceduralLandmass
                             break;
                         }
                     }
+
                     i++;
                 }
             }
